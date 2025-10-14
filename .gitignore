@@ -1,0 +1,9 @@
+/server/.vs
+server/appsettings.Development.json
+server/appsettings.json
+server/bin/Debug/net8.0/appsettings.Development.json
+/server/bin
+server/FlowerBot.http
+server/obj/Container/AbsoluteOutputAssemblyPath.cache
+server/obj/Container/AdditionalProbingPaths.cache
+/server/obj
