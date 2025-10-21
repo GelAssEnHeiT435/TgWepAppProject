@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TelegramProtectedRoute from './routes/TelegramProtectedRoute';
 import LoadingSpinner from './components/common/LoadingSpinner';
-import DevelopmentAuth from './components/layout/DevelopmentAuth';
+import Catalog from "./pages/Catalog"
 import { TelegramAuthProvider, useTelegramAuth } from './contexts/TelegramAuthContext';
 import './assets/styles/App.css';
 
@@ -13,15 +13,15 @@ function AppContent()
 
   return (
     <div className='App'>
-      {!window.Telegram?.WebApp && <DevelopmentAuth />}
+      <Catalog />
 
-      <Routes>
+      {/* <Routes>
         <Route path="/" element={
           <TelegramProtectedRoute>
             
           </TelegramProtectedRoute>
         } />
-      </Routes>
+      </Routes> */}
     </div>
   )
 }
