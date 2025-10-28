@@ -10,31 +10,42 @@ function ProductCard({photo = "", name = "", price = 0})
         console.log("navigated to info page");
     }
 
+    function handleIncrement(event){
+        event.stopPropagation();
+        setCount(count + 1)
+    }
+
+    function handleDecrement(event){
+        event.stopPropagation();
+        setCount(count - 1)
+    }
+
     useEffect( () => {
 
     }, [count])
 
     return (
         <div className="product-button-container">
-            <button onClick={ () => navigateToInfo() }
-                    className="product-button">
+            <button onClick={ () => navigateToInfo() } className="product-button">
                 <img src={photo} className="product-image"/> 
                 <p className="product-name">{name}</p>
                 <p className="product-price">{price}</p>
 
+                <div className="counter-button-container">
                 {
                     count === 0 ? 
                     (
-                        <button onClick={ () => setCount(count + 1) }
-                                className=""> Добавить </button>
+                        <button onClick={handleIncrement}
+                                className="start-product-button"> Добавить </button>
                     ) : (
-                        <div className="counter-button-container">
-                            <button onClick={ () => setCount(count - 1) } className="counter-button"> - </button>
-                            <span className="counter-button"> {count} </span>
-                            <button onClick={ () => setCount(count + 1) } className="counter-button"> + </button>
-                        </div>
+                        <>
+                            <button onClick={handleDecrement} className="counter-button"> — </button>
+                            <span className="counter-display"> {count} </span>
+                            <button onClick={handleIncrement} className="counter-button"> + </button>
+                        </>
                     )
                 }
+                </div>
             </button>
         </div>
     );

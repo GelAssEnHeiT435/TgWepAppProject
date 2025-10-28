@@ -8,16 +8,27 @@ function Catalog()
     const {user, logout} = useTelegramAuth();
 
     const products = [
-        { id: 1, name: 'Товар 1', price: 1000, description: 'Описание товара 1' },
-        { id: 2, name: 'Товар 2', price: 2000, description: 'Описание товара 2' },
-        { id: 3, name: 'Товар 3', price: 1500, description: 'Описание товара 3' },
-        { id: 3, name: 'Товар 3', price: 1500, description: 'Описание товара 3' },
-        { id: 3, name: 'Товар 3', price: 1500, description: 'Описание товара 3' },
-        { id: 3, name: 'Товар 3', price: 1500, description: 'Описание товара 3' },
-        { id: 3, name: 'Товар 3', price: 1500, description: 'Описание товара 3' },
-        { id: 3, name: 'Товар 3', price: 1500, description: 'Описание товара 3' },
-        { id: 3, name: 'Товар 3', price: 1500, description: 'Описание товара 3' },
-        { id: 3, name: 'Товар 3', price: 1500, description: 'Описание товара 3' },
+        { id: 1, name: 'Товар 12145263634573457745757547', price: 1000, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 2, name: 'Товар 2', price: 2000, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
+        { id: 3, name: 'Товар 3', price: 1500, photo: "D:/my_works/TgWepAppProject/client/src/assets/icons/logo192.png" },
     ];
 
     useEffect(() => {
@@ -32,10 +43,11 @@ function Catalog()
             </div>
 
             <div className="product-grid">
-                {
-                    products.map(product => (<ProductCard name={product.name} 
-                                                          price={product.price}/>))
-                }
+            {
+                products.map(product => (<ProductCard photo={product.photo}
+                                                      name={product.name} 
+                                                      price={product.price}/>))
+            }
             </div>
         </div>
     )
