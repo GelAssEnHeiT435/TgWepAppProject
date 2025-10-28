@@ -1,9 +1,25 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { TelegramAuthProvider, useTelegramAuth } from './contexts/TelegramAuthContext';
+import { CatalogProvider } from './contexts/CatalogContext';
+
 import TelegramProtectedRoute from './routes/TelegramProtectedRoute';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import Catalog from "./pages/Catalog"
-import { TelegramAuthProvider, useTelegramAuth } from './contexts/TelegramAuthContext';
+import Header from "./components/layout/Header"
+
 import './assets/styles/App.css';
+
+function App() {
+  return (
+    <TelegramAuthProvider>
+      <CatalogProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </CatalogProvider>
+    </TelegramAuthProvider>
+  );
+}
 
 function AppContent()
 {
@@ -13,6 +29,7 @@ function AppContent()
 
   return (
     <div className='App'>
+      <Header />
       <Catalog />
 
       {/* <Routes>
@@ -24,16 +41,6 @@ function AppContent()
       </Routes> */}
     </div>
   )
-}
-
-function App() {
-  return (
-    <TelegramAuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </TelegramAuthProvider>
-  );
 }
 
 export default App;

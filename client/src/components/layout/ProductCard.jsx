@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useCatalog } from "../../contexts/CatalogContext";
 import "../../assets/styles/ProductCard.css"
 
-function ProductCard({photo = "", name = "", price = 0})
+function ProductCard({id = null, photo = "", name = "", price = 0, quantity = 5})
 {
-    const [count, setCount] = useState(0);
+    const {addToBasket, removeFromBasket, getItemQuantity} = useCatalog();
+    const count = getItemQuantity(id);
 
     function navigateToInfo()
     {
@@ -12,12 +14,13 @@ function ProductCard({photo = "", name = "", price = 0})
 
     function handleIncrement(event){
         event.stopPropagation();
-        setCount(count + 1)
+        if (count >= quantity) return;
+        addToBasket(id);
     }
 
     function handleDecrement(event){
         event.stopPropagation();
-        setCount(count - 1)
+        removeFromBasket(id);
     }
 
     useEffect( () => {
@@ -28,8 +31,11 @@ function ProductCard({photo = "", name = "", price = 0})
         <div className="product-button-container">
             <button onClick={ () => navigateToInfo() } className="product-button">
                 <img src={photo} className="product-image"/> 
+                <div className="price-limit-container">
+                    <p className="product-price">{price}</p>
+                    <p className="limit-info">В наличии: {quantity} шт.</p>
+                </div>
                 <p className="product-name">{name}</p>
-                <p className="product-price">{price}</p>
 
                 <div className="counter-button-container">
                 {
