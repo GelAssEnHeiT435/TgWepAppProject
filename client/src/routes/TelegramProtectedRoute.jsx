@@ -1,7 +1,7 @@
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { useTelegramAuth } from '../contexts/TelegramAuthContext'
 
-import './assets/styles/LoadingSpinner.css';
+import '../assets/styles/LoadingSpinner.css';
 
 function TelegramProtectedRoute({children, adminOnly = false})
 {
