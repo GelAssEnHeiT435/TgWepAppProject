@@ -37,7 +37,7 @@ export function TelegramAuthProvider({children})
             {
                 const userRole = admins.includes(userData.id) ? 'admin' : 'user'
 
-                const userInfo = new User(userData.id, userData.first_name); //TODO: add user params after editing User.js
+                const userInfo = {id: userData.id, name: userData.first_name} //TODO: add user params after editing User.js
                 setUser(userInfo);
                 console.log('User authentificated', userInfo);
             }

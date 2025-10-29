@@ -3,11 +3,11 @@ import { useTelegramAuth } from '../contexts/TelegramAuthContext'
 
 function TelegramProtectedRoute({children, adminOnly = false})
 {
-    const { user, loading, isAuthentificated, isAdmin} = useTelegramAuth();
+    const { user, loading, isAuthenticated, isAdmin} = useTelegramAuth();
 
     //TODO: loading animation
 
-    if (!isAuthentificated) return (
+    if (!isAuthenticated) return (
         <div className='auth-error'>
             <h2>Требуется авторизация</h2>
             <p>Пожалуйста, откройте это приложение через Telegram бота</p>
