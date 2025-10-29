@@ -1,16 +1,14 @@
 //TODO: edit class structure
 class User {
-    constructor(id = 0, name = '', age = 0) {
+    constructor(id = 0, name = '') {
         this.id = id;
         this.name = name;
-        this.age = age;
     }
 
     static fromJson(json) {
         return new User(
             json.id || 0,
-            json.name || '',
-            json.age || 0
+            json.name || ''
         );
     }
 
@@ -19,11 +17,10 @@ class User {
                this.name && this.name.length > 0 ;
     }
 
-    toJson() {
+    static toJson() {
         return {
             id: this.id,
-            name: this.name,
-            age: this.age
+            name: this.name
         };
     }
 }
