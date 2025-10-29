@@ -5,6 +5,10 @@ import { CatalogProvider } from './contexts/CatalogContext';
 import TelegramProtectedRoute from './routes/TelegramProtectedRoute';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import Catalog from "./pages/Catalog"
+import Gifts from './pages/Gifts';
+import Profile from './pages/Profile'
+import AdminPanel from './pages/AdminPanel'
+import About from './pages/About'
 import Header from "./components/layout/Header"
 
 import './assets/styles/App.css';
@@ -30,15 +34,38 @@ function AppContent()
   return (
     <div className='App'>
       <Header />
-      <Catalog />
 
-      {/* <Routes>
+      <Routes>
         <Route path="/" element={
           <TelegramProtectedRoute>
-            
+            <Catalog />
+          </TelegramProtectedRoute>
+        }/>
+
+        <Route path="/gifts" element={
+          <TelegramProtectedRoute>
+            <Gifts />
+          </TelegramProtectedRoute>
+        }/>
+
+        <Route path="/profile" element={
+          <TelegramProtectedRoute>
+            <Profile />
           </TelegramProtectedRoute>
         } />
-      </Routes> */}
+
+        <Route path="/admin" element={
+          <TelegramProtectedRoute adminOnly={true}>
+            <AdminPanel />
+          </TelegramProtectedRoute>
+        } />
+
+        <Route path='/about' element={
+          <TelegramProtectedRoute>
+            <About />
+          </TelegramProtectedRoute>
+        } />
+      </Routes>
     </div>
   )
 }

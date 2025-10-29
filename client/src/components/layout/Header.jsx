@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import {  useNavigate, useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 import { useCatalog } from "../../contexts/CatalogContext";
 import { useTelegramAuth } from "../../contexts/TelegramAuthContext";
@@ -17,16 +17,37 @@ import "../../assets/styles/Header.css"
 function Header()
 {
     const location = useLocation();
-    const {user, isAdmin} = useTelegramAuth();
+    const navigate = useNavigate();
+    const {user, isAuthenticated} = useTelegramAuth();
     const {getTotalItems} = useCatalog();
     const [menuIsActive, setMenuIsActive] = useState(false);
 
     const totalItems = getTotalItems();
-    const showBasket = location.pathname === '/';
+    const showBasket = isAuthenticated && location.pathname === '/';
+
+    let header_text = '';
+    switch(location.pathname){
+        case '/': 
+            header_text = 'Каталог';
+            break;
+        case '/gifts':
+            header_text = 'Розыгрыши';
+            break;
+        case '/profile':
+            header_text = 'Профиль';
+            break;
+        case '/admin':
+            header_text = 'Разработчик';
+            break;
+        case 'about':
+            header_text = 'О нас';
+            break;
+    }
+    if(!isAuthenticated) header_text = 'Ошибка'
 
     return(
         <header className="catalog-header">
-                <h4 className="header-display">Каталог</h4>
+                <h4 className="header-display">{header_text}</h4>
                 <div className="header-buttons-container">
                     {showBasket && (
                         <button className="header-button">
@@ -47,15 +68,34 @@ function Header()
 
                     {menuIsActive && (
                         <div className='dropdown-menu'>
-                            <button> <ProfileOutlined /> Профиль</button>
-                            <button> <CatalogLine /> Каталог</button>
-                            <button> <GiftLine /> Розыгрыши и акции</button>
+                            <button onClick={() => { navigate('/profile'); setMenuIsActive(false); }}> 
+                                <ProfileOutlined /> Профиль
+                            </button>
+
+                            <button onClick={() => { navigate('/'); setMenuIsActive(false); }}> 
+                                <CatalogLine /> Каталог
+                            </button>
+
+                            <button onClick={() => { navigate('/gifts'); setMenuIsActive(false); }}> 
+                                <GiftLine /> Розыгрыши и акции
+                            </button>
+
                             {!user?.isAdmin && (
-                                <button> <AdministratorLine /> Админ-панель</button>
+                                <button onClick={() => { navigate('/admin'); setMenuIsActive(false); }}> 
+                                    <AdministratorLine /> Админ-панель
+                                </button>
                             )}
-                            <button> <InfoOutlined /> О нас</button>
+
+                            <button onClick={() => { navigate('/about'); setMenuIsActive(false); }}> 
+                                <InfoOutlined /> О нас
+                            </button>
+
                             <div className="menu-divider"></div>
-                            <button className="logout-btn"> <LogoutOutlined /> Выйти</button>
+
+                            <button onClick={() => {  setMenuIsActive(false); }} 
+                                    className="logout-btn"> 
+                                <LogoutOutlined /> Выйти
+                            </button>
                         </div>
                     )}
                 </div>
