@@ -1,11 +1,13 @@
+import LoadingSpinner from '../components/common/LoadingSpinner';
 import { useTelegramAuth } from '../contexts/TelegramAuthContext'
-//TODO: add spinner animation
+
+import './assets/styles/LoadingSpinner.css';
 
 function TelegramProtectedRoute({children, adminOnly = false})
 {
     const { user, loading, isAuthenticated, isAdmin} = useTelegramAuth();
 
-    //TODO: loading animation
+    if (loading) return ( <LoadingSpinner />)
 
     if (!isAuthenticated) return (
         <div className='auth-error'>

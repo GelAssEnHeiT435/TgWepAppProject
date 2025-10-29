@@ -12,6 +12,7 @@ import About from './pages/About'
 import Header from "./components/layout/Header"
 
 import './assets/styles/App.css';
+import './assets/styles/LoadingSpinner.css';
 
 function App() {
   return (

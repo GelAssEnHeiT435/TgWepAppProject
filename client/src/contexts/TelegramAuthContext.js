@@ -23,29 +23,32 @@ export function TelegramAuthProvider({children})
     }, [])
 
     useEffect(() => {
-        if (window.Telegram?.WebApp)
-        {
-            const tg = window.Telegram.WebApp;
+        const timer = setTimeout(() => {
+            if (window.Telegram?.WebApp){
+                const tg = window.Telegram.WebApp;
+                
+                tg.ready();
+                tg.expand()
 
-            tg.ready();
-            tg.expand()
+                const initData = tg.initDataUnsafe;
+                const userData = initData.user;
 
-            const initData = tg.initDataUnsafe;
-            const userData = initData.user;
+                if (userData)
+                {
+                    const userRole = admins.includes(userData.id) ? 'admin' : 'user'
 
-            if (userData)
-            {
-                const userRole = admins.includes(userData.id) ? 'admin' : 'user'
-
-                const userInfo = {id: userData.id, name: userData.first_name} //TODO: add user params after editing User.js
-                setUser(userInfo);
-                console.log('User authentificated', userInfo);
+                    const userInfo = {id: userData.id, name: userData.first_name} //TODO: add user params after editing User.js
+                    setUser(userInfo);
+                    console.log('User authentificated', userInfo);
+                }
+                else console.log('No user data available');
             }
-            else console.log('No user data available');
-        }
-        else console.warn('Telegram WebApp not available - running in development mode');
+            else console.warn('Telegram WebApp not available - running in development mode');
 
-        setLoading(false);
+            setLoading(false);
+        }, 500)
+
+        return () => clearTimeout(timer);
     }, [admins])
 
     function logout()
