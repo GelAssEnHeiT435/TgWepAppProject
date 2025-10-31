@@ -18,7 +18,7 @@ function Header()
 {
     const location = useLocation();
     const navigate = useNavigate();
-    const {user, isAuthenticated} = useTelegramAuth();
+    const {isAdmin, isAuthenticated, logout} = useTelegramAuth();
     const {getTotalItems} = useCatalog();
     const [menuIsActive, setMenuIsActive] = useState(false);
 
@@ -39,7 +39,7 @@ function Header()
         case '/admin':
             header_text = 'Разработчик';
             break;
-        case 'about':
+        case '/about':
             header_text = 'О нас';
             break;
     }
@@ -80,7 +80,7 @@ function Header()
                                 <GiftLine /> Розыгрыши и акции
                             </button>
 
-                            {!user?.isAdmin && (
+                            {isAdmin && (
                                 <button onClick={() => { navigate('/admin'); setMenuIsActive(false); }}> 
                                     <AdministratorLine /> Админ-панель
                                 </button>
@@ -92,7 +92,7 @@ function Header()
 
                             <div className="menu-divider"></div>
 
-                            <button onClick={() => {  setMenuIsActive(false); }} 
+                            <button onClick={() => { logout(); setMenuIsActive(false); }} 
                                     className="logout-btn"> 
                                 <LogoutOutlined /> Выйти
                             </button>
