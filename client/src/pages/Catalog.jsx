@@ -1,10 +1,10 @@
+import { useState, useEffect } from "react";
 import { useTelegramAuth } from "../contexts/TelegramAuthContext";
 import { useCatalog } from "../contexts/CatalogContext";
-import React, { useState, useEffect } from "react";
+
 import ProductCard from "../components/layout/ProductCard";
-import { BasketLine } from "../components/common/BasketLine";
-import { MenuOutlined } from "../components/common/MenuOutlined"
 import logo from "../assets/icons/flower1.jpg";
+
 import '../assets/styles/Catalog.css';
 
 

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { TelegramAuthProvider, useTelegramAuth } from './contexts/TelegramAuthContext';
 import { CatalogProvider } from './contexts/CatalogContext';
+import { ProductsProvider } from './contexts/ProductsContext';
 
 import TelegramProtectedRoute from './routes/TelegramProtectedRoute';
 import LoadingSpinner from './components/common/LoadingSpinner';
@@ -57,7 +58,9 @@ function AppContent()
 
         <Route path="/admin" element={
           <TelegramProtectedRoute adminOnly={true}>
-            <AdminPanel />
+            <ProductsProvider>
+              <AdminPanel />
+            </ProductsProvider>
           </TelegramProtectedRoute>
         } />
 

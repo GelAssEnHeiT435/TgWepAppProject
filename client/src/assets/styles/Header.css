@@ -125,30 +125,30 @@
 
 @media (max-width: 868px)
 {
-    .header-display{
+    .header-display {
         font-size: 32px;
     }
 }
 
 @media (max-width: 480px)
 {
-    .header-display{
-        font-size: 28px;
-    }
+  .header-display{
+    font-size: 28px;
+  }
 
-    .dropdown-menu {
+  .dropdown-menu {
     min-width: 160px;
-    }
+  }
   
   .dropdown-menu button {
     padding: 8px 12px;
     font-size: 13px;
-    }
+  }
 }
 
 @media (max-width: 360px)
 {
-    .header-display{
-        font-size: 24px;
-    }
+  .header-display{
+    font-size: 24px;
+  }
 }

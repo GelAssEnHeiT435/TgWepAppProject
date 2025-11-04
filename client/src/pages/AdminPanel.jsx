@@ -8,7 +8,7 @@ import GiftsManagement from '../components/layout/GiftsManagement'
 
 function AdminPanel()
 {
-    const [activeSection, setActiveSection] = useState('dashboard');
+    const [activeSection, setActiveSection] = useState('products');
 
     const adminSections = [
         { id: 'dashboard', icon: '📊', label: 'Дашборд' },
