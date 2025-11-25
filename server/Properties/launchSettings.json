@@ -20,14 +20,7 @@
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:52846"
     },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": false,
-      "launchUrl": "FlowerBot",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
+    
     "Container (Dockerfile)": {
       "commandName": "Docker",
       "launchBrowser": false,

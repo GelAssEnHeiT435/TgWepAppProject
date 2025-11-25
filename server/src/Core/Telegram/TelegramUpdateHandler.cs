@@ -19,7 +19,6 @@ namespace FlowerBot.src.Core.Telegram
 
             if (update.Message.Text.ToLower() == "/start")
             {
-                // Создаем кнопку веб-приложения
                 await _tgbot.SendMessage(
                     chatId: chatId,
                     text: "Нажмите кнопку для открытия сайта:",

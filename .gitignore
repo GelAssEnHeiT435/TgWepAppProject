@@ -7,3 +7,7 @@ server/FlowerBot.http
 server/obj/Container/AbsoluteOutputAssemblyPath.cache
 server/obj/Container/AdditionalProbingPaths.cache
 /server/obj
+/server/Migrations
+server/global.json
+/server/Properties
+/server/src/assets

@@ -4,9 +4,9 @@ import logo from "../../assets/icons/flower1.jpg";
 
 import '../../assets/styles/AdminProductCard.css'
 
-function AdminProductCard({ product })
+function AdminProductCard({ product, onEdit })
 {
-    const { createProduct, updateProduct, deleteProduct, changeActiveProduct} = useProducts();
+    const { deleteProduct, changeActiveProduct} = useProducts();
 
     const handleDelete = () => {
         if (window.confirm(`Удалить товар "${product.name}"?`)) {
@@ -18,7 +18,7 @@ function AdminProductCard({ product })
         <div className="product-container">
             {/* image container */}
             <div className="admin-image-container">
-                <img src={product.photo || logo} 
+                <img src={product.photo}
                      alt={product.name}
                      className="admin-product-image"/>
             </div>
@@ -50,7 +50,7 @@ function AdminProductCard({ product })
                 <button 
                     className="admin-action-btn edit-btn"
                     title="Редактировать"
-                    onClick={() => {/* будет позже */}}
+                    onClick={() => onEdit(product, product.photo) }
                 >
                     ✏️
                 </button>

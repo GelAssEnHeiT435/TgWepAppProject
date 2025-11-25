@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
+import ProductService from '../services/ProductService'
 import Product from '../models/Product'
 
 const ProductsContext = createContext();
@@ -18,25 +19,65 @@ export function ProductsProvider({children})
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        setProducts([new Product(1), new Product(2), new Product(3)])
+        loadProducts()
     }, [])
 
-    function createProduct()
-    {
+    async function loadProducts() {
+        try {
+            const productsData = await ProductService.getAllProducts();
+            console.log(productsData);
+            setProducts(productsData);
+        } catch (err) {
+            console.error('Error loading products:', err);
+        } 
+    };
 
+    async function createProduct(product)
+    {
+        try {
+            const dataJson = await ProductService.createProduct(product);
+
+            const newProduct = product instanceof Product 
+                ? { ...product, id: dataJson.id, photo: dataJson.image }
+                : { 
+                    ...product,           
+                    id: dataJson.id,      
+                    photo: dataJson.image
+                  };
+
+            setProducts(prev => [newProduct, ...prev]);
+        }
+        catch (err) {
+            console.error('Error created product:', err);
+        }
     }
 
-    function updateProduct(Uproduct)
+    async function updateProduct(Uproduct)
     {
-        setProducts(prevProducts => 
-            prevProducts.map(product => {
-                if(product.id === Uproduct.id) return { ...Uproduct, updatedAt: new Date() }
-            })
-        );
+        try {
+            const dataJson = await ProductService.updateProduct(Uproduct);
+
+            setProducts(prevProducts => 
+                prevProducts.map(product => {
+                    if(product.id === Uproduct.id) {
+                        const newPhoto = dataJson?.image ?? product.photo;
+                        return { ...Uproduct, 
+                            photo: dataJson?.image ?? product.photo, 
+                            updatedAt: dataJson?.update ?? product.updatedAt}
+                    }
+                    return product;
+                })
+            );
+        }
+        catch (err) {
+            console.error('Error updating product: ', err)
+        }
     }
 
-    function deleteProduct(productId)
+    async function deleteProduct(productId)
     {
+        await ProductService.deleteProduct(productId);
+
         setProducts(prevProducts => 
             prevProducts.filter(product => product.id !== productId)
         );
