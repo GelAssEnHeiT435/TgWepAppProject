@@ -28,7 +28,7 @@ jobs:
             --exclude='obj/' \
             --exclude='.git' \
             ./ \
-            deploy@${{ env.VPS_HOST }}:/home/deploy/staging/backend/
+            deploy@${{ env.VPS_HOST }}:/home/deploy/staging/
 
       - name: Verify files on VPS
         run: |
