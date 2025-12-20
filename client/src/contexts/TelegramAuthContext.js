@@ -1,5 +1,9 @@
 import React, {createContext, useContext, useState, useEffect } from "react";
+import axios from 'axios';
+
+import {authLogin, getAccessToken, authLogout} from '../services/Auth'
 import User from '../models/User'
+import config from '../config'
 
 
 const TelegramAuthContext = createContext();
@@ -15,46 +19,65 @@ export function TelegramAuthProvider({children})
 {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [admins, setAdmins] = useState([]);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
-        //TODO: response to server admin's list, convert and save
-        setAdmins([])
-    }, [])
+        const initializeAuth = async () => {
+            try {
+                if (window.Telegram?.WebApp) {
+                    const tg = window.Telegram.WebApp;
+                    tg.ready();
+                    tg.expand();
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (window.Telegram?.WebApp){
-                const tg = window.Telegram.WebApp;
-                
-                tg.ready();
-                tg.expand()
+                    const initData = tg.initData;
 
-                const initData = tg.initDataUnsafe;
-                const userData = initData.user;
+                    // if (!initData) {
+                    //     console.warn('No initData');
+                    //     setLoading(false);
+                    //     return;
+                    // }
 
-                if (userData)
-                {
-                    const userRole = admins.includes(userData.id) ? 'admin' : 'user'
+                    const userId = 397567122;
 
-                    const userInfo = {id: userData.id, name: userData.first_name} //TODO: add user params after editing User.js
-                    setUser(userInfo);
-                    console.log('User authentificated', userInfo);
+                    const response = await axios.post(
+                        `${config.apiBaseUrl}/auth/login`,
+                        userId, 
+                        {
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            withCredentials: true
+                        }
+                    );
+                    authLogin(response.data);
+                    setIsAuthenticated(true);
+                } 
+                else {
+                // development mock
+                    setUser({ id: 123, name: 'Dev User', role: 'user' });
+                    setIsAuthenticated(true);
                 }
-                else console.log('No user data available');
+            } 
+            catch (error) {
+                console.error('Auth failed:', error);
+            } 
+            finally {
+                setLoading(false);
             }
-            else console.warn('Telegram WebApp not available - running in development mode');
+        };
 
-            setLoading(false);
-        }, 500)
-
-        return () => clearTimeout(timer);
-    }, [admins])
+        const timer = setTimeout(initializeAuth, 500);
+        return () => clearTimeout(timer)
+    }, [])
 
     function logout()
     {
-        if (window.Telegram?.WebApp) window.Telegram.WebApp.close();
-        else setUser(null);
+        authLogout(); 
+        setUser(null);
+        setIsAuthenticated(false);
+        if (window.Telegram?.WebApp) {
+            window.Telegram.WebApp.close();
+        }
     }
 
     const value = {

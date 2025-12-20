@@ -28,12 +28,12 @@ class Product {
             json.name,
             json.price,
             json.quantity,
-            json.category ,
+            json.category,
             json.description,
             json.photo,
-            json.isActive,
-            json.createdAt,
-            json.updatedAt
+            json.hasOwnProperty('is_active') ? Boolean(json.is_active) : false,
+            new Date(json.created_at),
+            new Date(json.updated_at)
         );
     }
 

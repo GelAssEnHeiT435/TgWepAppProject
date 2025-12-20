@@ -26,7 +26,7 @@ function AdminProductCard({ product, onEdit })
             {/* info container */}
             <div className="admin-info-container">
                 <h3 className="admin-product-name">{product.name}</h3>
-                <p className="admin-product-price">{product.price.toLocaleString()} ₽</p>
+                <p className="admin-product-price">{(product.price ?? 0).toLocaleString()} ₽</p>
 
                 {product.description && (
                     <p className="admin-product-description" title={product.description}>{product.description}</p>

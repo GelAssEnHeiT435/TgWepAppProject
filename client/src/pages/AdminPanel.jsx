@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import AdminSidebar from '../components/layout/AdminTabs'
 import Dashboard from '../components/layout/Dashboard'
 import ProductsManagement from '../components/layout/ProductsManagement'
 import OrdersManagement from '../components/layout/OrdersManagement'
 import GiftsManagement from '../components/layout/GiftsManagement'
+
+import '../assets/styles/AdminPanel.css'
 
 function AdminPanel()
 {

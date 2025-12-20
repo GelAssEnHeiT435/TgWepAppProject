@@ -1,15 +1,16 @@
 ﻿using FlowerBot.src.Core.Interfaces;
+using FlowerBot.src.Data;
 using FlowerBot.src.Data.Models.Common;
 using FlowerBot.src.Data.Models.Database;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace FlowerBot.src.Data.Handlers
+namespace FlowerBot.src.Core.Handlers.ProductManagement
 {
-    public record class UpdateProductCommand(Guid? Id, string Name, decimal Price,
-                                             int Quantity, string Category, string Description, 
-                                             bool IsActive, IFormFile? Image) : IRequest<ProductUpdateResult?>;
+    public record class UpdateProductCommand(Guid? Id, string? Name, decimal? Price,
+                                             int? Quantity, string? Category, string? Description, 
+                                             bool? IsActive, IFormFile? Image) : IRequest<ProductUpdateResult?>;
 
     public class UpdatePriductHandler : IRequestHandler<UpdateProductCommand, ProductUpdateResult?>
     {
@@ -44,23 +45,23 @@ namespace FlowerBot.src.Data.Handlers
                 newRelativePath = imageResult.RelativePath;
             }
 
-            if( !(string.IsNullOrWhiteSpace(request.Name) && product.Name.Equals(request.Name)) )
+            if (!string.IsNullOrWhiteSpace(request.Name) && !string.Equals(product.Name, request.Name, StringComparison.Ordinal))
                 product.Name = request.Name;
 
-            if(product.Price != request.Price)
-                product.Price = request.Price;
+            if (request.Price.HasValue && product.Price != request.Price.Value)
+                product.Price = request.Price.Value;
 
-            if(product.Quantity != request.Quantity)
-                product.Quantity = request.Quantity;
+            if (request.Quantity.HasValue && product.Quantity != request.Quantity.Value)
+                product.Quantity = request.Quantity.Value;
 
-            if (!string.IsNullOrWhiteSpace(request.Category) && !request.Category.Equals(product.Category))
+            if (!string.IsNullOrWhiteSpace(request.Category) && !string.Equals(product.Category, request.Category, StringComparison.Ordinal))
                 product.Category = request.Category;
 
-            if (!string.Equals(request.Description, product.Description, StringComparison.Ordinal))
+            if (request.Description != null && !string.Equals(product.Description, request.Description, StringComparison.Ordinal))
                 product.Description = request.Description;
 
-            if(product.isActive != request.IsActive)
-                product.isActive = request.IsActive;
+            if (request.IsActive.HasValue && product.isActive != request.IsActive.Value)
+                product.isActive = request.IsActive.Value;
 
             bool hasChanges = _context.Entry(product).Properties
                 .Any(p => p.IsModified && p.OriginalValue != null && !Equals(p.OriginalValue, p.CurrentValue));

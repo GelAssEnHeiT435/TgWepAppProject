@@ -1,4 +1,5 @@
 import Product from '../models/Product'
+import apiClient from './ApiClient';
 
 const API_URL = 'http://localhost:52846/api'
 
@@ -7,17 +8,8 @@ class ProductService
     async getAllProducts()
     {
         try {
-            const response = await fetch(`${API_URL}/products/all`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-
-            if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-            const data = await response.json();
-            return data.map(productJson => Product.fromJson(productJson));
+            const response = await apiClient.get(`/products`)
+            return response.data.map(productJson => Product.fromJson(productJson));
         }
         catch (error) {
             console.error('Error fetching products:', error);
@@ -41,14 +33,8 @@ class ProductService
         }
 
         try {
-            const response = await fetch(`${API_URL}/products/create`, {
-                method: 'POST',
-                body: formData
-            });
-
-            if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-            return await response.json();
+            const response = await apiClient.postForm(`/products`, formData)
+            return await response.data;
         }
         catch (error) {
             console.error('Error fetching products:', error);
@@ -59,28 +45,21 @@ class ProductService
     async updateProduct(product)
     {
         const formData = new FormData();
-        
-        formData.append("Id", product.id)
-        formData.append('Name', product.name);
-        formData.append('Price', product.price);
-        formData.append('Quantity', product.quantity);
-        formData.append('Category', product.category);
-        formData.append('Description', product.description);
-        formData.append('IsActive', product.isActive ? 'true' : 'false');
-    
+  
+        if (product.name !== undefined) formData.append('Name', product.name);
+        if (product.price !== undefined) formData.append('Price', product.price);
+        if (product.quantity !== undefined) formData.append('Quantity', product.quantity);
+        if (product.category !== undefined) formData.append('Category', product.category);
+        if (product.description !== undefined) formData.append('Description', product.description);
+        if (product.isActive !== undefined) formData.append('IsActive', product.isActive ? 'true' : 'false');
+
         if (product.photo instanceof File) {
-            formData.append('Image', product.photo); 
+            formData.append('Image', product.photo);
         }
 
         try {
-            const response = await fetch(`${API_URL}/products/update`, {
-                method: 'PUT',
-                body: formData
-            });
-
-            if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-            if (response) return await response.json();
+            const response = await apiClient.patchForm(`/products?Id=${product.id}`, formData)
+            if (response) return await response.data;
         }
         catch (error) {
             console.error('Error fetching products:', error);
@@ -91,11 +70,7 @@ class ProductService
     async deleteProduct(productId)
     {
         try {
-            const response = await fetch(`${API_URL}/products/delete?Id=${productId}`, {
-                method: 'DELETE'
-            });
-
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const response = await apiClient.delete(`/products?Id=${productId}`)
         }
         catch (error) {
             console.error('Error fetching products:', error);

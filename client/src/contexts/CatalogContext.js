@@ -1,4 +1,5 @@
 import React, {createContext, useContext, useState, useEffect } from "react";
+import CatalogService from "../services/CatalogService";
 
 const CatalogContext = createContext();
 
@@ -12,6 +13,16 @@ export function useCatalog()
 export function CatalogProvider({children})
 {
     const [basketItems, setBasketItems] = useState({}); // Object - productIds : Quantity
+    const [products, setProducts] = useState([]);
+
+    async function loadCatalog() {
+            try {
+                const productsData = await CatalogService.getCatalog();
+                setProducts(productsData);
+            } catch (err) {
+                console.error('Error loading products:', err);
+            } 
+        };
 
     function addToBasket(productId)
     {
@@ -44,6 +55,8 @@ export function CatalogProvider({children})
 
     const value = {
         basketItems,
+        products,
+        loadCatalog,
         addToBasket,
         removeFromBasket,
         getTotalItems,

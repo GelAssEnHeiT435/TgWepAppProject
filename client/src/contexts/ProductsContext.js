@@ -17,6 +17,7 @@ export function useProducts()
 export function ProductsProvider({children})
 {
     const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         loadProducts()
@@ -25,7 +26,7 @@ export function ProductsProvider({children})
     async function loadProducts() {
         try {
             const productsData = await ProductService.getAllProducts();
-            console.log(productsData);
+            setLoading(false);
             setProducts(productsData);
         } catch (err) {
             console.error('Error loading products:', err);
@@ -52,27 +53,29 @@ export function ProductsProvider({children})
         }
     }
 
-    async function updateProduct(Uproduct)
-    {
+    async function updateProduct(Uproduct) {
         try {
             const dataJson = await ProductService.updateProduct(Uproduct);
 
-            setProducts(prevProducts => 
+            setProducts(prevProducts =>
                 prevProducts.map(product => {
-                    if(product.id === Uproduct.id) {
-                        const newPhoto = dataJson?.image ?? product.photo;
-                        return { ...Uproduct, 
-                            photo: dataJson?.image ?? product.photo, 
-                            updatedAt: dataJson?.update ?? product.updatedAt}
+                    if (product.id === Uproduct.id) {
+                        const updatedProduct = {
+                            ...product, 
+                            ...Uproduct,
+                            photo: dataJson?.image ?? product.photo,
+                            updatedAt: dataJson?.update ?? product.updatedAt
+                        };
+                        return updatedProduct;
                     }
                     return product;
                 })
             );
-        }
+        } 
         catch (err) {
-            console.error('Error updating product: ', err)
+            console.error('Error updating product: ', err);
         }
-    }
+}
 
     async function deleteProduct(productId)
     {
@@ -83,19 +86,37 @@ export function ProductsProvider({children})
         );
     }
 
-    function changeActiveProduct(productId)
-    {
-        setProducts(prevProducts => 
-            prevProducts.map(product => 
-                product.id === productId 
-                    ? { ...product, isActive: !product.isActive, updatedAt: new Date() }
+    async function changeActiveProduct(productId) {
+        try {
+            const productToUpdate = products.find(p => p.id === productId);
+            if (!productToUpdate) return;
+
+            const updatePayload = {
+                id: productToUpdate.id,
+                isActive: !productToUpdate.isActive
+            };
+            const dataJson = await ProductService.updateProduct(updatePayload);
+
+            setProducts(prevProducts =>
+                prevProducts.map(product =>
+                    product.id === productId
+                    ? { 
+                        ...product, 
+                        isActive: !product.isActive, 
+                        updatedAt: dataJson?.updatedAt || new Date().toISOString()
+                        }
                     : product
-            )
-        );
+                )
+            );
+        } 
+        catch (err) {
+            console.error('Error updating product active status:', err);
+        }
     }
 
     const value = {
         products,
+        loading,
         createProduct,
         updateProduct,
         deleteProduct,

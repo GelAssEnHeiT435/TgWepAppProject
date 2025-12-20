@@ -1,9 +1,10 @@
 ﻿using FlowerBot.src.Core.Interfaces;
+using FlowerBot.src.Data;
 using FlowerBot.src.Data.Models.Common;
 using FlowerBot.src.Data.Models.Database;
 using MediatR;
 
-namespace FlowerBot.src.Data.Handlers
+namespace FlowerBot.src.Core.Handlers.ProductManagement
 {
     public record class CreateProductCommand(string Name, decimal Price, int Quantity, 
                                              string Category, string Description, bool isActive, 

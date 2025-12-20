@@ -11,6 +11,7 @@ function ProductForm( {mode = 'create', product = new Product(), formPhoto, setF
     const [formData, setFormData] = useState(product); // current product(new or editable)
     const [errors, setErrors] = useState({}); // param info errors on window
     const [isSubmitting, setIsSubmitting] = useState(false); // param for activity save button
+    const [originalProduct, setOriginalProduct] = useState(mode === 'edit' ? product : null);
 
     function handleChange(e)
     {
@@ -56,20 +57,47 @@ function ProductForm( {mode = 'create', product = new Product(), formPhoto, setF
         return Object.keys(newErrors).length === 0;
     };
 
+    function getChangedFields(original, current) {
+        if (!original) return current; // if creating mode - return all
+
+        const changes = {};
+
+        if (current.name !== original.name) changes.name = current.name;
+        if (current.price !== original.price) changes.price = current.price;
+        if (current.quantity !== original.quantity) changes.quantity = current.quantity;
+        if (current.category !== original.category) changes.category = current.category;
+        if (current.description !== original.description) changes.description = current.description;
+        if (current.isActive !== original.isActive) changes.isActive = current.isActive;
+
+        return changes;
+    }
+
     async function handleSubmit(e) {
         e.preventDefault();
-        
-        if (!validateForm()) {
-            return;
-        }
+
+        if (!validateForm()) return;
 
         setIsSubmitting(true);
 
         try {
             if (mode === 'create') {
                 await createProduct(formData);
-            } else {
-                await updateProduct(formData);
+            } 
+            else {
+                // get only editing params
+                const changedFields = getChangedFields(originalProduct, formData);
+                
+                // if edit nothing - nothing change
+                if (Object.keys(changedFields).length === 0 && !formData.photo) {
+                    onClose();
+                    return;
+                }
+
+                await updateProduct({
+                    id: formData.id,
+                    ...changedFields,
+                    photo: formData.photo
+                });
             }
             
             setFormPhoto(null);

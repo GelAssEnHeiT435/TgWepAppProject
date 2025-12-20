@@ -1,10 +1,11 @@
-﻿using FlowerBot.src.Data.Models.Common;
+﻿using FlowerBot.src.Data;
+using FlowerBot.src.Data.Models.Common;
 using FlowerBot.src.Data.Models.Dto;
 using FlowerBot.src.Data.Specifications;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FlowerBot.src.Data.Handlers
+namespace FlowerBot.src.Core.Handlers.ProductManagement
 {
     public record class ReadProductsCommand(string url): IRequest<IReadOnlyCollection<ProductDto>>;
 

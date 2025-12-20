@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useCatalog } from "../../contexts/CatalogContext";
 import "../../assets/styles/ProductCard.css"
 
-function ProductCard({id = null, photo = "", name = "", price = 0, quantity = 5})
+function ProductCard({id = null, photo = "", name = "", price = 0, quantity = 0})
 {
     const {addToBasket, removeFromBasket, getItemQuantity} = useCatalog();
     const count = getItemQuantity(id);
@@ -32,7 +32,7 @@ function ProductCard({id = null, photo = "", name = "", price = 0, quantity = 5}
             <button onClick={ () => navigateToInfo() } className="product-button">
                 <img src={photo} className="product-image"/> 
                 <div className="price-limit-container">
-                    <p className="product-price">{price}</p>
+                    <p className="product-price">{(price ?? 0).toLocaleString()} ₽</p>
                     <p className="limit-info">В наличии: {quantity} шт.</p>
                 </div>
                 <p className="product-name">{name}</p>

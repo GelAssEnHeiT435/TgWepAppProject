@@ -1,9 +1,10 @@
 ﻿using FlowerBot.src.Core.Interfaces;
+using FlowerBot.src.Data;
 using FlowerBot.src.Data.Models.Database;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FlowerBot.src.Data.Handlers
+namespace FlowerBot.src.Core.Handlers.ProductManagement
 {
     public record class DeleteProductCommand(Guid Id): IRequest;
     

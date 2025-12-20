@@ -11,3 +11,4 @@ server/obj/Container/AdditionalProbingPaths.cache
 server/global.json
 /server/Properties
 /server/src/assets
+client/.env.development

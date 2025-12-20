@@ -2,9 +2,8 @@
 
 namespace FlowerBot.src.Data.Models.Dto
 {
-    public class InnerProductDto
+    public class CreateProductDto
     {
-        public Guid? Id { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }

@@ -5,6 +5,7 @@ namespace FlowerBot.src.Data
 {
     public class ApplicationContext: DbContext
     {
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
         public DbSet<Product> Products => Set<Product>();
         public DbSet<Image> Images => Set<Image>();
 
