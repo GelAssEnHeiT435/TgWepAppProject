@@ -40,7 +40,7 @@ jobs:
           npm run build
         env:
           CI: false
-          REACT_APP_API_BASE_URL: https://staging.ivy-web.ru/api
+          REACT_APP_API_BASE_URL: "/api"
 
       - name: Setup SSH key
         run: |
