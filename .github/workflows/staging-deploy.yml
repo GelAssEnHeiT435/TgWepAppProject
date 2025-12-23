@@ -32,7 +32,7 @@ jobs:
 
       - name: Publish ASP.NET Core (server/)
         run: dotnet publish ./server/FlowerBot.csproj -c Release -o ./published-backend
-
+        
       - name: Build React (client/)
         run: |
           cd client
@@ -40,6 +40,7 @@ jobs:
           npm run build
         env:
           CI: false
+          REACT_APP_API_BASE_URL: https://staging.ivy-web.ru/api
 
       - name: Setup SSH key
         run: |
