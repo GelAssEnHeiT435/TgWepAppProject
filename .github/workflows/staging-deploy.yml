@@ -50,7 +50,8 @@ jobs:
 
       - name: Deploy backend to VPS
         run: |
-          rsync -avz --delete \
+          rsync -avz \
+            --exclude='appsettings.json' \
             ./published-backend/ \
             ${{ env.DEPLOY_USER }}@${{ env.VPS_HOST }}:/home/deploy/staging/backend/
 
