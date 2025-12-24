@@ -31,8 +31,4 @@
     <Folder Include="src\assets\images\" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Compile Include="Migrations\**\*.cs" />
-	</ItemGroup>
-
 </Project>
