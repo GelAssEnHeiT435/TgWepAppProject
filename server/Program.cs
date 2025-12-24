@@ -121,6 +121,8 @@ namespace FlowerBot
                 KnownProxies = { IPAddress.Parse("127.0.0.1") }
             });
 
+            app.UseRouting();
+
             // Статика
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -128,8 +130,6 @@ namespace FlowerBot
                     Path.Combine(builder.Environment.ContentRootPath, builder.Configuration["Paths:ImageStorage"]!)),
                 RequestPath = "/api/images"
             });
-
-            app.UseRouting();
 
             if (app.Environment.IsDevelopment())
             {
