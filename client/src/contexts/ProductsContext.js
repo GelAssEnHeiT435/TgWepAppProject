@@ -37,6 +37,7 @@ export function ProductsProvider({children})
     {
         try {
             const dataJson = await ProductService.createProduct(product);
+            console.log(dataJson.image)
 
             const newProduct = product instanceof Product 
                 ? { ...product, id: dataJson.id, photo: dataJson.image }
