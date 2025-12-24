@@ -3,12 +3,12 @@ using FlowerBot.src.Core.Services;
 using FlowerBot.src.Core.Telegram;
 using FlowerBot.src.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
+using System.Net;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 
@@ -111,6 +111,16 @@ namespace FlowerBot
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                       ForwardedHeaders.XForwardedProto |
+                       ForwardedHeaders.XForwardedHost,
+                KnownNetworks = { new Microsoft.AspNetCore.HttpOverrides.IPNetwork(IPAddress.Parse("127.0.0.1"), 32) },
+                KnownProxies = { IPAddress.Parse("127.0.0.1") }
+            });
+
             // Статика
             app.UseStaticFiles(new StaticFileOptions
             {
