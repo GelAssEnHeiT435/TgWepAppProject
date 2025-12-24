@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 
@@ -131,6 +132,13 @@ namespace FlowerBot
             else
             {
                 app.UseCors("ProductionCors");
+            }
+
+            if (app.Environment.IsStaging())
+            {
+                using var scope = app.Services.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+                db.Database.Migrate();
             }
 
             app.UseHttpsRedirection();
