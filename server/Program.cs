@@ -146,14 +146,14 @@ namespace FlowerBot
             app.UseAuthorization();
             app.MapControllers();
 
-            //var bot = app.Services.GetRequiredService<ITelegramBotClient>();
-            //await bot.SetWebhook(
-            //    url: $"{builder.Configuration["TelegramBot:WebhookUrl"]}/api/bot",
-            //    allowedUpdates: new[] {
-            //        UpdateType.Message,
-            //        UpdateType.CallbackQuery
-            //    },
-            //    cancellationToken: CancellationToken.None);
+            var bot = app.Services.GetRequiredService<ITelegramBotClient>();
+            await bot.SetWebhook(
+                url: $"{builder.Configuration["TelegramBot:WebhookUrl"]}/api/bot",
+                allowedUpdates: new[] {
+                    UpdateType.Message,
+                    UpdateType.CallbackQuery
+                },
+                cancellationToken: CancellationToken.None);
 
             app.Run();
         }
