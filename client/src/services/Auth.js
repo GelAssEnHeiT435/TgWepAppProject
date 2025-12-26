@@ -1,11 +1,14 @@
 import apiClient from './ApiClient';
 
 let _accessToken = null;
+let _role = null;
 let refreshTimeout = null;
 
 export const getAccessToken = () => _accessToken;
-
 export const setAccessToken = (token) => _accessToken = token;
+
+export const getRole = () => _role;
+export const setRole = (token) => _role = JSON.parse(atob(token.split('.')[1]))?.role;
 
 const getTokenExpiry = () => {
     try {
@@ -57,13 +60,14 @@ const refreshTokenSilently = async () => {
 
 
 export const authLogin = (token) => {
-  _accessToken = token;
-  scheduleTokenRefresh();
+    setAccessToken(token);
+    setRole(token);
+    scheduleTokenRefresh();
 };
 
 export const authLogout = () => {
     clearRefreshTimeout();
     _accessToken = null;
-    // TODO^ close tg window
+    window?.Telegram?.WebApp.close();
 };
 

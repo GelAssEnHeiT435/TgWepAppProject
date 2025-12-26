@@ -17,12 +17,10 @@ namespace FlowerBot.src.Core.Services
 
         public string GenerateJwt(long telegramId, TimeSpan expires)
         {
-            string role = IsAdmin(telegramId) ? "admin" : "user";
-
             var claims = new[]
             {
                 new Claim("telegramId", telegramId.ToString()),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, IsAdmin(telegramId) ? "admin" : "user")
             };
 
             var token = new JwtSecurityToken(

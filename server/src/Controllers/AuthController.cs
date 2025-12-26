@@ -16,10 +16,10 @@ namespace FlowerBot.src.Controllers
 
         [HttpPost("login")]
         public async Task<ActionResult<string?>> Login(
-            [FromBody] long? TelegramId,
+            [FromBody] string? InitDataRaw,
             CancellationToken cancellationToken)
         {
-            AuthorizationUserCommand query = new AuthorizationUserCommand(TelegramId);
+            AuthorizationUserCommand query = new AuthorizationUserCommand(InitDataRaw);
             TokensResult? token = await _mediator.Send(query);
 
             if (token == null) 
@@ -27,11 +27,11 @@ namespace FlowerBot.src.Controllers
 
             Response.Cookies.Append("refreshToken", token.RefreshToken.ToString()!, new CookieOptions
             {
-                HttpOnly = false,
+                HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.None,
+                SameSite = SameSiteMode.Strict,
                 Expires = DateTime.UtcNow.AddDays(7),
-                Path = "/"
+                Path = "/api/auth"
             });
 
             return Ok(token.AccessToken);

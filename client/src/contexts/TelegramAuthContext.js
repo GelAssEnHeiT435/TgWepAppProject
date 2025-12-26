@@ -31,17 +31,15 @@ export function TelegramAuthProvider({children})
 
                     const initData = tg.initData;
 
-                    // if (!initData) {
-                    //     console.warn('No initData');
-                    //     setLoading(false);
-                    //     return;
-                    // }
-
-                    const userId = 397567122;
+                    if (!initData) {
+                        console.warn('No initData');
+                        setLoading(false);
+                        return;
+                    }
 
                     const response = await axios.post(
                         `${config.apiBaseUrl}/auth/login`,
-                        userId, 
+                        initData, 
                         {
                             headers: {
                                 'Content-Type': 'application/json'
@@ -49,14 +47,10 @@ export function TelegramAuthProvider({children})
                             withCredentials: true
                         }
                     );
+
                     authLogin(response.data);
                     setIsAuthenticated(true);
                 } 
-                else {
-                // development mock
-                    setUser({ id: 123, name: 'Dev User', role: 'user' });
-                    setIsAuthenticated(true);
-                }
             } 
             catch (error) {
                 console.error('Auth failed:', error);
@@ -84,7 +78,7 @@ export function TelegramAuthProvider({children})
         user,
         loading,
         logout,
-        isAuthenticated: true, //!!user,
+        isAuthenticated: !!user,
         isAdmin: true //user?.isAdmin || false
     }
 
