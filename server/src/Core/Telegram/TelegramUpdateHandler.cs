@@ -22,30 +22,32 @@ namespace FlowerBot.src.Core.Telegram
         public async Task HandleAsync(Update update)
         {
             var chatId = update?.Message?.Chat.Id;
-            var fromId = update?.Message?.From?.Id;
 
             if (update.Message.Text.ToLower() == "/start")
             {
-                List<InlineKeyboardButton> inlineButtons = new List<InlineKeyboardButton>();
-
-                inlineButtons.Add(InlineKeyboardButton.WithWebApp(
-                    "Открыть веб страницу",
-                    new WebAppInfo { Url = "https://ivy-web.ru" }
-                ));
-
-                if (_adminIds.Contains(fromId.Value))
+                List<KeyboardButton> buttons = new List<KeyboardButton>();
                 {
-                    inlineButtons.Add(InlineKeyboardButton.WithWebApp(
-                        "Открыть тестовую страницу",
-                        new WebAppInfo { Url = "https://staging.ivy-web.ru" }
-                    ));
+                    new KeyboardButton("Открыть веб страницу"){ WebApp = new WebAppInfo{
+                        Url = "https://ivy-web.ru"
+                    }};
+                }
+
+                if (_adminIds.Contains(update.Message.From!.Id))
+                {
+                    buttons.Add(new KeyboardButton("Открыть тестовую страницу"){ WebApp = new WebAppInfo{
+                        Url = "https://t.me/IvyPykhtyolkinBot/market"
+                    }});
                 }
 
                 await _tgbot.SendMessage(
-                    chatId: chatId.Value,
+                    chatId: chatId,
                     text: "Нажмите кнопку для открытия сайта:",
-                    replyMarkup: new InlineKeyboardMarkup(inlineButtons)
-                );
+                    replyMarkup: new ReplyKeyboardMarkup(new[] {
+                        buttons
+                    })
+                    {
+                        ResizeKeyboard = true
+                    });
             }
         }
     }
