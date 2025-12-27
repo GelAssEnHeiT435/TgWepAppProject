@@ -22,32 +22,30 @@ namespace FlowerBot.src.Core.Telegram
         public async Task HandleAsync(Update update)
         {
             var chatId = update?.Message?.Chat.Id;
+            var fromId = update?.Message?.From?.Id;
 
-            if (update.Message.Text.ToLower() == "/start")
+            if (update?.Message?.Text?.ToLower() == "/start" && chatId.HasValue && fromId.HasValue)
             {
-                List<KeyboardButton> buttons = new List<KeyboardButton>();
-                {
-                    new KeyboardButton("Открыть веб страницу"){ WebApp = new WebAppInfo{
-                        Url = "https://ivy-web.ru"
-                    }};
-                }
+                var inlineButtons = new List<InlineKeyboardButton>();
 
-                if (_adminIds.Contains(update.Message.From!.Id))
+                inlineButtons.Add(InlineKeyboardButton.WithWebApp(
+                    "Открыть веб страницу",
+                    new WebAppInfo { Url = "https://t.me/IvyPykhtyolkinBot/market" }
+                ));
+
+                if (_adminIds.Contains(fromId.Value))
                 {
-                    buttons.Add(new KeyboardButton("Открыть тестовую страницу"){ WebApp = new WebAppInfo{
-                        Url = "https://t.me/IvyPykhtyolkinBot/market"
-                    }});
+                    inlineButtons.Add(InlineKeyboardButton.WithWebApp(
+                        "Открыть тестовую страницу",
+                        new WebAppInfo { Url = "https://t.me/IvyPykhtyolkinBot/market" }
+                    ));
                 }
 
                 await _tgbot.SendMessage(
-                    chatId: chatId,
+                    chatId: chatId.Value,
                     text: "Нажмите кнопку для открытия сайта:",
-                    replyMarkup: new ReplyKeyboardMarkup(new[] {
-                        buttons
-                    })
-                    {
-                        ResizeKeyboard = true
-                    });
+                    replyMarkup: new InlineKeyboardMarkup(inlineButtons)
+                );
             }
         }
     }
