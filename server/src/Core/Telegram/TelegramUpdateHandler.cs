@@ -26,25 +26,25 @@ namespace FlowerBot.src.Core.Telegram
 
             if (update?.Message?.Text?.ToLower() == "/start" && chatId.HasValue && fromId.HasValue)
             {
-                var inlineButtons = new List<InlineKeyboardButton>();
+                var rows = new List<InlineKeyboardButton[]>();
 
-                inlineButtons.Add(InlineKeyboardButton.WithWebApp(
-                    "Открыть веб страницу",
-                    new WebAppInfo { Url = "https://t.me/IvyPykhtyolkinBot/market" }
-                ));
+                rows.Add(new[] {
+                    InlineKeyboardButton.WithWebApp("Открыть веб страницу",
+                        new WebAppInfo { Url = "https://t.me/IvyPykhtyolkinBot/market" })
+                });
 
                 if (_adminIds.Contains(fromId.Value))
                 {
-                    inlineButtons.Add(InlineKeyboardButton.WithWebApp(
-                        "Открыть тестовую страницу",
-                        new WebAppInfo { Url = "https://t.me/IvyPykhtyolkinBot/market" }
-                    ));
+                    rows.Add(new[] {
+                        InlineKeyboardButton.WithWebApp("Открыть тестовую страницу",
+                            new WebAppInfo { Url = "https://t.me/IvyPykhtyolkinBot/market" })
+                    });
                 }
 
                 await _tgbot.SendMessage(
                     chatId: chatId.Value,
-                    text: "Нажмите кнопку для открытия сайта:",
-                    replyMarkup: new InlineKeyboardMarkup(inlineButtons)
+                    text: "Нажмите кнопку:",
+                    replyMarkup: new InlineKeyboardMarkup(rows)
                 );
             }
         }
