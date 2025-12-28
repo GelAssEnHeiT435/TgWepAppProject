@@ -33,13 +33,13 @@ namespace FlowerBot.src.Core.Telegram
                         new WebAppInfo { Url = "https://ivy-web.ru" })
                 });
 
-                //if (_adminIds.Contains(fromId.Value))
-                //{
-                //    rows.Add(new[] {
-                //        InlineKeyboardButton.WithWebApp("Открыть тестовую страницу",
-                //            new WebAppInfo { Url = "https://staging.ivy-web.ru" })
-                //    });
-                //}
+                if (_adminIds.Contains(fromId.Value))
+                {
+                    rows.Add(new[] {
+                        InlineKeyboardButton.WithWebApp("Открыть тестовую страницу",
+                            new WebAppInfo { Url = "https://staging.ivy-web.ru" })
+                    });
+                }
 
                 await _tgbot.SendMessage(
                     chatId: chatId.Value,
