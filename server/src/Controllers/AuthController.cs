@@ -16,9 +16,11 @@ namespace FlowerBot.src.Controllers
 
         [HttpPost("login")]
         public async Task<ActionResult<string?>> Login(
-            [FromBody] string? InitDataRaw,
             CancellationToken cancellationToken)
         {
+            using var reader = new StreamReader(Request.Body);
+            string? InitDataRaw = await reader.ReadToEndAsync(cancellationToken);
+
             AuthorizationUserCommand query = new AuthorizationUserCommand(InitDataRaw);
             TokensResult? token = await _mediator.Send(query);
 
