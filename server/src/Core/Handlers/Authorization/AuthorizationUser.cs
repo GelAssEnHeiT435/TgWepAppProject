@@ -40,7 +40,7 @@ namespace FlowerBot.src.Core.Handlers.Authorization
                 return null;
             }
 
-            if (!InitDataValidator.Validate(request.InitDataRaw!, _botToken))
+            if (!InitDataValidator.Validate(request.InitDataRaw!, _botToken, _logger))
             {
                 _logger.LogWarning("Валидация InitDataRaw не пройдена. Данные: {Data}", request.InitDataRaw);
                 return null; 
