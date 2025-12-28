@@ -7,7 +7,7 @@ public static class InitDataValidator
     public static bool Validate(string initDataRaw, string botToken, ILogger logger, TimeSpan maxAge = default)
     {
         logger.LogInformation("Начало валидации InitData. Длина: {Length}", initDataRaw?.Length ?? 0);
-        logger.LogDebug("Длина botToken: {TokenLength}", botToken.Length);
+        logger.LogDebug("Длина botToken: {TokenLength}", botToken.Trim().Length);
 
         if (string.IsNullOrEmpty(initDataRaw) || string.IsNullOrEmpty(botToken))
         {
