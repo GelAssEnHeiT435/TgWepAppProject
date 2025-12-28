@@ -12,7 +12,7 @@ public static class InitDataValidator
         var pairs = initDataRaw.Split('&')
             .Select(part => part.Split('=', 2))
             .Where(parts => parts.Length == 2)
-            .Select(parts => new { Key = parts[0], Value = Uri.UnescapeDataString(parts[1]) })
+            .Select(parts => new { Key = parts[0], Value = parts[1] })
             .ToList();
 
         if (!pairs.Any(p => p.Key == "hash"))
