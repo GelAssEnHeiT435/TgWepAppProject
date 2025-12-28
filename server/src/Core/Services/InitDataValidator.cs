@@ -20,7 +20,7 @@ public static class InitDataValidator
 
         var receivedHash = pairs.First(p => p.Key == "hash").Value;
         var dataCheckString = string.Join("\n",
-            pairs.Where(p => p.Key != "hash")
+            pairs.Where(p => p.Key != "hash" && p.Key != "signature")
                  .OrderBy(p => p.Key)
                  .Select(p => $"{p.Key}={p.Value}"));
 
