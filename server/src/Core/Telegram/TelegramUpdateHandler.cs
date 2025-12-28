@@ -24,20 +24,20 @@ namespace FlowerBot.src.Core.Telegram
             var chatId = update?.Message?.Chat.Id;
             var fromId = update?.Message?.From?.Id;
 
-            if (update?.Message?.Text?.ToLower() == "/start" && chatId.HasValue && fromId.HasValue)
+            if (update?.Message?.Text?.ToLower() == "/start")
             {
                 var rows = new List<InlineKeyboardButton[]>();
 
                 rows.Add(new[] {
                     InlineKeyboardButton.WithWebApp("Открыть веб страницу",
-                        new WebAppInfo { Url = "https://t.me/IvyPykhtyolkinBot/market" })
+                        new WebAppInfo { Url = "https://ivy-web.ru" })
                 });
 
                 //if (_adminIds.Contains(fromId.Value))
                 //{
                 //    rows.Add(new[] {
                 //        InlineKeyboardButton.WithWebApp("Открыть тестовую страницу",
-                //            new WebAppInfo { Url = "https://t.me/IvyPykhtyolkinBot/test_market" })
+                //            new WebAppInfo { Url = "https://staging.ivy-web.ru" })
                 //    });
                 //}
 
