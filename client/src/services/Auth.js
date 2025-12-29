@@ -8,7 +8,13 @@ export const getAccessToken = () => _accessToken;
 export const setAccessToken = (token) => _accessToken = token;
 
 export const getRole = () => _role;
-export const setRole = (token) => _role = JSON.parse(atob(token.split('.')[1]))?.role;
+export const setRole = (token) => 
+{
+    const jsonData = JSON.parse(atob(token.split('.')[1]))
+    console.log(jsonData);
+    _role = jsonData?.role;
+
+}
 
 const getTokenExpiry = () => {
     try {
