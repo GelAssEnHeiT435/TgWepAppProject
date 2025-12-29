@@ -8,9 +8,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
+
 namespace FlowerBot.src.Core.Handlers.Authorization
 {
-    public record class AuthorizationUserCommand(string? InitDataRaw) : IRequest<TokensResult?>;
+    public record class AuthorizationUserCommand(SortedDictionary<string, string>? InitDataRaw) : IRequest<TokensResult?>;
 
     public class AuthorizationUserHandler : IRequestHandler<AuthorizationUserCommand, TokensResult?>
     {

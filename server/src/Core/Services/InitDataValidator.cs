@@ -4,101 +4,93 @@ using System.Text.Json;
 
 public static class InitDataValidator
 {
-    public static bool Validate(string initDataRaw, string botToken, ILogger logger, TimeSpan maxAge = default)
+    public static bool Validate(SortedDictionary<string, string> dataDict, string botToken, ILogger logger, TimeSpan maxAge = default)
     {
-        logger.LogInformation("Начало валидации InitData. Длина: {Length}", initDataRaw?.Length ?? 0);
-        logger.LogDebug("Длина botToken: {TokenLength}", botToken.Trim().Length);
+        string constantKey = "WebAppData";
 
-        if (string.IsNullOrEmpty(initDataRaw) || string.IsNullOrEmpty(botToken))
+        var dataCheckString = string.Join(
+            '\n',
+            dataDict.Where(x => x.Key != "hash")
+                    .Select(x => $"{x.Key}={x.Value}")
+        );
+
+        logger.LogDebug("Data-check-string: {DataCheckString}", dataCheckString);
+
+        var secretKey = ComputeHMACSHA256(
+            Encoding.UTF8.GetBytes(constantKey),
+            Encoding.UTF8.GetBytes(botToken)
+        );
+
+        var generatedHash = ComputeHMACSHA256(
+            secretKey,
+            Encoding.UTF8.GetBytes(dataCheckString)
+        );
+
+        // Convert received hash from telegram to a byte array.
+        byte[] actualHash;
+        try
         {
-            logger.LogWarning("initDataRaw или botToken пусты");
+            actualHash = Convert.FromHexString(dataDict["hash"]);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to parse 'hash' as hex: {HashValue}", dataDict["hash"]);
             return false;
         }
 
-        // Парсим БЕЗ декодирования
-        var pairs = initDataRaw.Split('&')
-            .Select(part => part.Split('=', 2))
-            .Where(parts => parts.Length == 2)
-            .Select(parts => new { Key = parts[0], Value = parts[1] })
-            .ToList();
-
-        logger.LogDebug("Распарсено {Count} пар", pairs.Count);
-
-        if (!pairs.Any(p => p.Key == "hash"))
+        // Compare our hash with the one from telegram.
+        if (actualHash.SequenceEqual(generatedHash))
         {
-            logger.LogWarning("Хеш отсутствует в данных");
-            return false;
-        }
+            logger.LogInformation("InitData hash validation succeeded.");
 
-        var receivedHash = pairs.First(p => p.Key == "hash").Value;
-        logger.LogDebug("Получен хеш: {Hash}", receivedHash);
-
-        // Собираем dataCheckString
-        var dataCheckString = string.Join("\n",
-            pairs.Where(p => p.Key != "hash" && p.Key != "signature")
-                 .OrderBy(p => p.Key)
-                 .Select(p => $"{p.Key}={p.Value}"));
-
-        logger.LogDebug("dataCheckString:\n{DataCheckString}", dataCheckString);
-
-        // Вычисляем secret_key
-        byte[] secretKey;
-        using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(botToken)))
-        {
-            secretKey = hmac.ComputeHash(Encoding.UTF8.GetBytes("WebAppData"));
-        }
-
-        // Вычисляем хеш
-        byte[] computedHashBytes;
-        using (var hmac = new HMACSHA256(secretKey))
-        {
-            computedHashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(dataCheckString));
-        }
-        var computedHash = Convert.ToHexString(computedHashBytes).ToLowerInvariant();
-
-        logger.LogDebug("Вычисленный хеш: {ComputedHash}", computedHash);
-
-        if (!CryptographicOperations.FixedTimeEquals(
-                Encoding.UTF8.GetBytes(computedHash),
-                Encoding.UTF8.GetBytes(receivedHash)))
-        {
-            logger.LogWarning("Хеши НЕ совпадают!");
-            return false;
-        }
-
-        // Проверка срока действия
-        if (pairs.FirstOrDefault(p => p.Key == "auth_date")?.Value is string authDateStr &&
-            long.TryParse(authDateStr, out long authDate))
-        {
-            var authTime = DateTimeOffset.FromUnixTimeSeconds(authDate);
-            var age = DateTimeOffset.UtcNow - authTime;
-            logger.LogDebug("Возраст данных: {Age}", age);
-            if (age > (maxAge == default ? TimeSpan.FromHours(1) : maxAge))
+            // Optionally, check the auth_date to prevent outdated data
+            if (dataDict.TryGetValue("auth_date", out var authDateStr) && long.TryParse(authDateStr, out var authDate))
             {
-                logger.LogWarning("Данные устарели");
-                return false;
+                var authDateTime = DateTimeOffset.FromUnixTimeSeconds(authDate);
+                var now = DateTimeOffset.UtcNow;
+                var age = now - authDateTime;
+
+                logger.LogDebug("Auth date: {AuthDateTime}, age: {Age}", authDateTime, age);
+
+                if (authDateTime < now.AddMinutes(-5))
+                {
+                    logger.LogWarning("InitData is too old (>5 minutes): {AuthDateTime}", authDateTime);
+                    return false;
+                }
             }
+
+            return true;
         }
 
-        logger.LogInformation("Валидация успешна");
-        return true;
+        logger.LogWarning("InitData hash validation failed. Expected hash doesn't match.");
+        return false;
     }
 
-    public static long? GetUserId(string initDataRaw)
+    public static long? GetUserId(SortedDictionary<string, string> dataDict)
     {
-        var userPart = initDataRaw.Split('&')
-            .FirstOrDefault(part => part.StartsWith("user="));
-        if (userPart == null) return null;
+        if (!dataDict.TryGetValue("user", out var userJson) || string.IsNullOrEmpty(userJson))
+            return null;
 
         try
         {
-            var json = Uri.UnescapeDataString(userPart[5..]);
-            using var doc = JsonDocument.Parse(json);
-            return doc.RootElement.GetProperty("id").GetInt64();
+            using var doc = JsonDocument.Parse(userJson);
+            if (doc.RootElement.TryGetProperty("id", out var idElement) &&
+                idElement.ValueKind == JsonValueKind.Number)
+            {
+                return idElement.GetInt64();
+            }
         }
-        catch
+        catch (Exception ex)
         {
             return null;
         }
+
+        return null;
+    }
+
+    private static byte[] ComputeHMACSHA256(byte[] key, byte[] data)
+    {
+        using var hmac = new HMACSHA256(key);
+        return hmac.ComputeHash(data);
     }
 }

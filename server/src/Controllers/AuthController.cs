@@ -3,6 +3,7 @@ using FlowerBot.src.Data.Models.Common;
 using FlowerBot.src.Data.Models.Database;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Web;
 
 namespace FlowerBot.src.Controllers
 {
@@ -20,8 +21,14 @@ namespace FlowerBot.src.Controllers
         {
             using var reader = new StreamReader(Request.Body);
             string? InitDataRaw = await reader.ReadToEndAsync(cancellationToken);
+            var data = HttpUtility.ParseQueryString(InitDataRaw);
 
-            AuthorizationUserCommand query = new AuthorizationUserCommand(InitDataRaw);
+            // Put data in a alphabetically sorted dict.
+            SortedDictionary<string, string> dataDict = new SortedDictionary<string, string>(
+                data.AllKeys.ToDictionary(x => x!, x => data[x]!),
+                StringComparer.Ordinal);
+
+            AuthorizationUserCommand query = new AuthorizationUserCommand(dataDict);
             TokensResult? token = await _mediator.Send(query);
 
             if (token == null) 
