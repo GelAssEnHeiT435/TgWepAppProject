@@ -62,6 +62,7 @@ const refreshTokenSilently = async () => {
 export const authLogin = (token) => {
     setAccessToken(token);
     setRole(token);
+    console.log(getRole());
     scheduleTokenRefresh();
 };
 
