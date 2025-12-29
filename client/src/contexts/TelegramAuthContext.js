@@ -1,7 +1,7 @@
 import React, {createContext, useContext, useState, useEffect } from "react";
 import axios from 'axios';
 
-import {authLogin, getAccessToken, authLogout} from '../services/Auth'
+import {authLogin, getAccessToken, authLogout, getRole} from '../services/Auth'
 import User from '../models/User'
 import config from '../config'
 
@@ -78,8 +78,8 @@ export function TelegramAuthProvider({children})
         user,
         loading,
         logout,
-        isAuthenticated: !!user,
-        isAdmin: true //user?.isAdmin || false
+        isAuthenticated,
+        isAdmin: getRole() === 'admin'
     }
 
     return (
