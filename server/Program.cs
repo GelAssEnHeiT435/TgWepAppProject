@@ -54,7 +54,6 @@ namespace FlowerBot
                         ClockSkew = TimeSpan.Zero,
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true,
-                        RoleClaimType = "role",
                     };
                 });
             

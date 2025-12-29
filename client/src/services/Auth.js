@@ -1,5 +1,7 @@
 import apiClient from './ApiClient';
 
+const CLAIM_ROLE = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+
 let _accessToken = null;
 let _role = null;
 let refreshTimeout = null;
@@ -12,7 +14,7 @@ export const setRole = (token) =>
 {
     const jsonData = JSON.parse(atob(token.split('.')[1]))
     console.log(jsonData);
-    _role = jsonData?.role;
+    _role = jsonData[CLAIM_ROLE] || undefined;
 
 }
 
