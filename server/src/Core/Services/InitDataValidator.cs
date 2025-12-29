@@ -4,10 +4,13 @@ using System.Text.Json;
 
 public static class InitDataValidator
 {
-    public static bool Validate(SortedDictionary<string, string> dataDict, string botToken, ILogger logger, TimeSpan maxAge = default)
+    private static string constantKey = "WebAppData";
+    public static bool Validate(
+        SortedDictionary<string, string> dataDict, 
+        string botToken, 
+        ILogger logger, 
+        TimeSpan maxAge = default)
     {
-        string constantKey = "WebAppData";
-
         var dataCheckString = string.Join(
             '\n',
             dataDict.Where(x => x.Key != "hash")
@@ -28,12 +31,10 @@ public static class InitDataValidator
 
         // Convert received hash from telegram to a byte array.
         byte[] actualHash;
-        try
-        {
+        try {
             actualHash = Convert.FromHexString(dataDict["hash"]);
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             logger.LogWarning(ex, "Failed to parse 'hash' as hex: {HashValue}", dataDict["hash"]);
             return false;
         }
