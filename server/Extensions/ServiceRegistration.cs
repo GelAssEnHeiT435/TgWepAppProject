@@ -29,6 +29,9 @@ namespace FlowerBot.Extensions
             builder.AddSwaggerDoc();
         }
 
+        /// <summary>
+        /// Add options objects with validate
+        /// </summary>
         private static void ConfigureOptions(this WebApplicationBuilder builder) 
         {
             builder.Services.AddOptions<JwtOptions>()
@@ -38,6 +41,11 @@ namespace FlowerBot.Extensions
 
             builder.Services.AddOptions<TelegramOptions>()
                 .BindConfiguration("TelegramBot")
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
+            builder.Services.AddOptions<PathsOptions>()
+                .BindConfiguration("Paths")
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
         }
