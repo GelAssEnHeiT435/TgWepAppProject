@@ -1,5 +1,7 @@
 ﻿using FlowerBot.src.Core.Interfaces;
 using FlowerBot.src.Data.Models.Common;
+using FlowerBot.src.Options;
+using Microsoft.Extensions.Options;
 using Telegram.Bot.Types;
 
 namespace FlowerBot.src.Core.Services
@@ -7,13 +9,13 @@ namespace FlowerBot.src.Core.Services
     public class FileManager: IFileManager
     {
         private readonly IWebHostEnvironment _environment;
-        private readonly IConfiguration _configuration;
+        private readonly PathsOptions _pathOptions;
 
         public FileManager(IWebHostEnvironment environment,
-                           IConfiguration configuration)
+                           IOptions<PathsOptions> pathOptions)
         {
             _environment = environment;
-            _configuration = configuration;
+            _pathOptions = pathOptions.Value;
         }
 
         public async Task<ImageUploadResult?> SaveImageAsync(IFormFile file, CancellationToken ct = default)
@@ -21,7 +23,7 @@ namespace FlowerBot.src.Core.Services
             if (file == null || file.Length == 0 || !IsImage(file))
                 return null;
 
-            string directory = _configuration["Paths:ImageStorage"];
+            string directory = _pathOptions.ImageStorage;
             var uploadsDir = Path.Combine(_environment.ContentRootPath, directory);
             Directory.CreateDirectory(uploadsDir);
 
@@ -38,7 +40,7 @@ namespace FlowerBot.src.Core.Services
         {
             if (string.IsNullOrWhiteSpace(fileName)) return;
 
-            string fullPath = Path.Combine(_environment.ContentRootPath, _configuration["Paths:ImageStorage"], fileName);
+            string fullPath = Path.Combine(_environment.ContentRootPath, _pathOptions.ImageStorage, fileName);
 
             if(File.Exists(fullPath)) File.Delete(fullPath);
         }

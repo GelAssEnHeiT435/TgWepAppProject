@@ -2,8 +2,10 @@
 using FlowerBot.src.Data;
 using FlowerBot.src.Data.Models.Common;
 using FlowerBot.src.Data.Models.Database;
+using FlowerBot.src.Options;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -24,11 +26,11 @@ namespace FlowerBot.src.Core.Handlers.Authorization
             ILogger<AuthorizationUserHandler> logger,
             ApplicationContext context, 
             IAuthService authService,
-            IConfiguration configuration)
+            IOptions<TelegramOptions> telegramOptions)
         {
             _context = context;
             _authService = authService;
-            _botToken = configuration["TelegramBot:Token"]
+            _botToken = telegramOptions.Value.Token
                     ?? throw new InvalidOperationException("Telegram bot token missing");
             _logger = logger;
         }

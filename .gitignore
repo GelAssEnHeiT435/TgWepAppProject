@@ -11,3 +11,4 @@ server/global.json
 /server/Properties
 /server/src/assets
 client/.env.development
+server/AuthOptions.cs

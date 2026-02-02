@@ -1,4 +1,6 @@
 ﻿using FlowerBot.src.Core.Interfaces;
+using FlowerBot.src.Options;
+using Microsoft.Extensions.Options;
 using System.Linq;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -10,13 +12,9 @@ namespace FlowerBot.src.Core.Telegram
     {
         private readonly ITelegramBotClient _tgbot;
         private readonly HashSet<long> _adminIds;
-        public TelegramUpdateHandler(IServiceProvider provider, IConfiguration configuration)
+        public TelegramUpdateHandler(IOptions<TelegramOptions> telegramOptions)
         {
-            _tgbot = provider.GetRequiredService<ITelegramBotClient>();
-            _adminIds = configuration
-                .GetSection("TelegramBot:Admins")
-                .Get<List<long>>()
-                ?.ToHashSet() ?? new HashSet<long>();
+            _adminIds = telegramOptions.Value.Admins?.ToHashSet() ?? new HashSet<long>();
         }
 
         public async Task HandleAsync(Update update)
